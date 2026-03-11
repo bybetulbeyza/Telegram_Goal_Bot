@@ -8,10 +8,10 @@ TOKEN = os.getenv("TOKEN")
 BOT_USERNAME = os.getenv("BOT_USERNAME")
 
 MOTIVATION_MESSAGES = [
-    "🐑 Baa! Keep pushing, every step counts! 🎯",
-    "🌱 Small goals today, big wins tomorrow!",
-    "🚀 You got this! Mark your goals and shine!",
-    "✨ Stay consistent, your streaks are growing!",
+    "🐑Baa! Keep pushing, every step counts! ",
+    "Small goals today, big wins tomorrow!",
+    "You got this! Mark your goals and shine!",
+    "Stay consistent, your streaks are growing!",
 ]
 
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
