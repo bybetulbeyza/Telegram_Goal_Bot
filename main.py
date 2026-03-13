@@ -14,13 +14,15 @@ MOTIVATION_MESSAGES = [
     "Stay consistent, your streaks are growing!",
 ]
 
+user_goals = {}
+
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
   await update.message.reply_text("Baa! 🐑 Hi, I’m your friendly goal-tracking sheep! Let’s add your goals and see those streaks grow!")
 
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
   help_text = (
       "🐑 Baa! Here’s what I can do:\n\n"
-      "/add_goal <goal> - Add a new goal\n"
+      "/new_goal <goal> - Add a new goal\n"
       "/my_goals - Show your current goals\n"
       "/done <goal> - Mark a goal as completed\n"
       "/help - Show this help message\n\n"
@@ -32,16 +34,41 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def motivate_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
   msg = random.choice(MOTIVATION_MESSAGES)
   await update.message.reply_text(msg)
+  
+async def add_goal_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
+    context.user_data["waiting_for_goal"] = True
+
+    await update.message.reply_text("🐑 Baa! What goal do you want to add?")
 
 
 def handle_response(text: str) -> str:
-  processed: str = text.lower()
-  if 'hello' in processed:
-    return 'Baa, Ready to help!'
-  if 'how are you' in processed:
-    return 'living my life, eating grass'
-  
-  return 'You may try to speak Baa! language maybe, cus thats all i can understand from human tongue Baa!'
+    processed = text.lower()
+
+    if 'hello' in processed:
+        return 'Baa, Ready to help!'
+
+    if 'how are you' in processed:
+        return 'living my life, eating grass'
+
+    return 'You may try to speak Baa! language maybe, cus thats all i can understand from human tongue Baa!'
+
+async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
+    text = update.message.text
+
+    if context.user_data.get("waiting_for_goal"):
+
+        goal = text
+        context.user_data["waiting_for_goal"] = False
+
+        await update.message.reply_text(f"🎯 Goal added: {goal}")
+        return
+
+    response = handle_response(text)
+
+    await update.message.reply_text(response)
+
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
   message_type: str = update.message.chat.type
@@ -71,7 +98,8 @@ if __name__=='__main__':
   #commands
   app.add_handler(CommandHandler('start',start_command)) 
   app.add_handler(CommandHandler('help',help_command)) 
-  app.add_handler(CommandHandler('motivate',motivate_command)) 
+  app.add_handler(CommandHandler('motivate',motivate_command))
+  app.add_handler(CommandHandler('new_goal',add_goal_command)) 
 
   #messages
   app.add_handler(MessageHandler(filters.TEXT, handle_message))
