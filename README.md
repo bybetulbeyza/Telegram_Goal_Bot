@@ -1,4 +1,4 @@
-# í°‘ Baa Bot â€” Telegram Goal Tracker
+# Baa Bot â€” Telegram Goal Tracker
 
 A Telegram bot that helps you set and track personal goals.
 
